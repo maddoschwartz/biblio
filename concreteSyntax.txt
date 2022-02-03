@@ -1,0 +1,134 @@
+/* Concrete Syntax
+
+
+keywords = follow end info set bibliography style link graph
+           source sources <field> <styles> <name>
+
+sfield = author title publisher language media
+
+nfield = year
+
+fieldPair = sfield : String
+          | nfield : Number
+
+styles = MLA Chicago APA
+
+name = USERDEFINED
+
+collection = sources
+           | list-of <name>
+
+following = NOTHING
+          | follow <name>
+
+condition = undefined 
+
+exp = <sfield> <name> String
+    | <sfield> <collection> String
+    | <nfield> <name> Number
+    | <nfield> <collection> Number
+    | info <collection> <field>
+    | set <collection> <condition>
+    | link <collection> String
+    | graph <name> <following> end
+    | style <styles>
+    | bibliography <collection>
+    | bibliography <name>
+    | source <name> map-of <fieldPair>
+
+/*
+ * Example 1: declare a new source
+ *      source <user-defined-name> identifiers descriptors
+ */
+source Defronzo {
+    author: "James Defrnzo",
+    title: "Revolutions and Revolutionary Movements",
+    publisher: "Westview Press",
+    year: 2014,
+    language: "English",
+    media: "text"
+}
+
+
+
+/*
+ * Example 2: update a source(s) field
+ *      <field> <name> Number
+ *      <field> <collection> Number
+ */
+year Defronzo 2012
+year [Defronzo, Pipes] 2015
+
+
+
+/*
+ * Example 3: link sources
+ *      link <collection> String
+ */
+link [Defronzo, Pipes, Fitzpatrick] "russian revolution"
+
+
+
+/*
+ * Example 4: set bibliography style
+ *      style <predefined-styles>
+ */
+style MLA
+
+
+/*
+ * Example 5: show source structure
+ *      <name>
+ */
+Defronzo
+
+
+/*
+ * Example 6: pretty print source in bibliogrpahy style
+ *      bibliography <name>
+ */
+bibliography Defronzo
+
+
+/*
+ * Example 7: print bibliography
+ *      bibliography <collection>
+ */ 
+bibliography sources
+bibliography [Defronzo, Pipes]
+
+
+/*
+ * Example 8: get a subset of the sources
+ *      set <collection> <condition>
+ */ 
+set sources (year > 2014)
+
+
+/*
+ * Example 9: get meta-information on the sources 
+ *      info <collection> <field>
+ */
+info sources language
+
+
+/*
+ * Example 10: Follow links of sources
+ *      graph <name>
+ */
+    graph Defronzo
+
+    // interpreter's response
+    > links 
+    >    Pipes: Russian revolution
+    >    Doyle: French revolution
+
+    // follow a link
+    follow Pipes
+
+    // interpreter's response
+    > links
+    >   Fitzpatrick: Western bias
+
+    // end following
+    end
